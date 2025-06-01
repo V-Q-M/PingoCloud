@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PingoCloud</title>
+</head>
+
+<body>
+  <h2>Click below to download the image:</h2>
+
+  <img src="images/test.jpg" alt="Example" width="300"><br><br>
+
+  <!-- Download button -->
+  <form action="download.php" method="get">
+    <input type="hidden" name="file" value="test.jpg">
+    <button type="submit">Download Image</button>
+  </form>
+
+</body>
+
+</html>
