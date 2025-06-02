@@ -24,30 +24,66 @@ async function loadImagesAndButtons() {
 
       const ext = filename.split(".").pop()?.toLowerCase() || "";
 
+      // Second wrapper that controls size of media element
+      const mediaWrapper = document.createElement("div");
+      mediaWrapper.className =
+        "w-72 h-40 flex flex-col overflow-hidden items-center justify-end bg-gray-200 rounded ";
       let mediaEl;
 
-      if (["jpg", "jpeg", "png", "gif"].includes(ext)) {
+      if (["jpg", "jpeg", "png", "gif", "svg", "ico"].includes(ext)) {
         const img = document.createElement("img");
         img.src = `/storage/${directory}/${filename}`;
         img.alt = filename;
-        img.className = "w-72 rounded shadow";
-        mediaEl = img;
+        img.className =
+          "max-w-full max-h-full object-contain ml-1 mr-1 mt-2 mb-2 rounded"; // fit inside wrapper
+        mediaWrapper.appendChild(img);
+        //
       } else if (["mp4", "webm"].includes(ext)) {
         const video = document.createElement("video");
         video.src = `/storage/${directory}/${filename}`;
         video.controls = true;
-        video.className = "w-72 rounded shadow";
-        mediaEl = video;
+        video.className = "max-w-full max-h-full mb-4 rounded";
+        mediaWrapper.appendChild(video);
+        // Add player and logo
       } else if (["mp3", "wav"].includes(ext)) {
         const audio = document.createElement("audio");
         audio.src = `/storage/${directory}/${filename}`;
         audio.controls = true;
-        mediaEl = audio;
-      }
-      //fallback
-      if (!mediaEl) {
-        console.warn("Skipping unsupported file:", filename);
-        return;
+        mediaWrapper.className =
+          "w-72 h-40 flex flex-col overflow-hidden  items-center justify-end bg-gray-200 rounded shadow";
+        const musicLogo = document.createElement("img");
+        musicLogo.src = `/icons/music.svg`;
+        musicLogo.className = "w-16 h-16 mb-2";
+        mediaWrapper.appendChild(musicLogo);
+        mediaWrapper.appendChild(audio);
+        // Progammer files
+      } else if (["asm", "wasm"].includes(ext)) {
+        const code = document.createElement("img");
+        code.src = `/icons/asm.svg`;
+        code.alt = filename;
+        code.className = "max-w-full max-h-full mb-2";
+        mediaWrapper.appendChild(code);
+        //
+      } else if (["java", "jar"].includes(ext)) {
+        const code = document.createElement("img");
+        code.src = `/icons/java.svg`;
+        code.alt = filename;
+        code.className = "max-w-full max-h-full mb-2";
+        mediaWrapper.appendChild(code);
+        //
+      } else if (["c", "cpp", "h", "hpp"].includes(ext)) {
+        const code = document.createElement("img");
+        code.src = `/icons/c.svg`;
+        code.alt = filename;
+        code.className = "max-w-full max-h-full mb-2";
+        mediaWrapper.appendChild(code);
+        //
+      } else {
+        const fallback = document.createElement("div");
+        fallback.className = "text-5xl";
+        fallback.textContent = "📄";
+        mediaEl = fallback;
+        mediaWrapper.appendChild(fallback);
       }
 
       const button = document.createElement("button");
@@ -76,7 +112,7 @@ async function loadImagesAndButtons() {
       };
 
       // append image + button to wrapper
-      wrapper.appendChild(mediaEl);
+      wrapper.appendChild(mediaWrapper);
       wrapper.appendChild(button);
 
       container.appendChild(wrapper);
