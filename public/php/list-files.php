@@ -12,7 +12,7 @@ if ($files === false) {
 }
 
 $filtered = array_values(array_filter($files, function ($file) use ($basePath) {
-  return is_file($basePath . '/' . $file) && preg_match('/\.(jpg|jpeg|png|gif|mp4)$/i', $file);
+  return is_file($basePath . '/' . $file) && preg_match('/\.(jpg|jpeg|png|gif|mp4|mp3|wav|webm)$/i', $file);
 }));
 
 header('Content-Type: application/json');

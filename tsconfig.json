@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["es2020", "dom"], // ← DOM is needed for browser types
     "target": "es6",
     "module": "none",
     "outDir": "./public/dist",

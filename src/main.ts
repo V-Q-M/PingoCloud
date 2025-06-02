@@ -22,10 +22,33 @@ async function loadImagesAndButtons() {
       const wrapper = document.createElement("div");
       wrapper.className = "flex flex-col items-center";
 
-      const img = document.createElement("img");
-      img.src = `/storage/${directory}/${filename}`;
-      img.alt = filename;
-      img.className = "w-72 rounded shadow";
+      const ext = filename.split(".").pop()?.toLowerCase() || "";
+
+      let mediaEl;
+
+      if (["jpg", "jpeg", "png", "gif"].includes(ext)) {
+        const img = document.createElement("img");
+        img.src = `/storage/${directory}/${filename}`;
+        img.alt = filename;
+        img.className = "w-72 rounded shadow";
+        mediaEl = img;
+      } else if (["mp4", "webm"].includes(ext)) {
+        const video = document.createElement("video");
+        video.src = `/storage/${directory}/${filename}`;
+        video.controls = true;
+        video.className = "w-72 rounded shadow";
+        mediaEl = video;
+      } else if (["mp3", "wav"].includes(ext)) {
+        const audio = document.createElement("audio");
+        audio.src = `/storage/${directory}/${filename}`;
+        audio.controls = true;
+        mediaEl = audio;
+      }
+      //fallback
+      if (!mediaEl) {
+        console.warn("Skipping unsupported file:", filename);
+        return;
+      }
 
       const button = document.createElement("button");
       button.textContent = `${filename}`;
@@ -53,7 +76,7 @@ async function loadImagesAndButtons() {
       };
 
       // append image + button to wrapper
-      wrapper.appendChild(img);
+      wrapper.appendChild(mediaEl);
       wrapper.appendChild(button);
 
       container.appendChild(wrapper);
