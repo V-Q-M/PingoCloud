@@ -5,10 +5,12 @@ This is my own Cloudstorage/ file-sharing system designed for small home servers
 # Supported features are:
 
 - Image downloads
+- Video downloads
+- Audio downloads
+- file downloads
 
 # Upcoming features are:
 
-- File downloads
 - Image uploads
 - File uploads
 
