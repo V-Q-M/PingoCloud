@@ -1,6 +1,6 @@
 <?php
 // Directory where images are stored
-$imageDir = __DIR__ . '/images/';
+$imageDir = __DIR__ . '/../public/images/';
 
 // Get filename from URL (sanitized)
 
