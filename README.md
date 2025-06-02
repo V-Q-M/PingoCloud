@@ -1,6 +1,7 @@
 # PingoCloud
 
 This is my own Cloudstorage/ file-sharing system designed for small home servers.
+It is optimized for Vimium like browsers with direct download buttons.
 
 # Supported features are:
 
