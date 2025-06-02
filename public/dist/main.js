@@ -11,8 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 function loadImagesAndButtons() {
     return __awaiter(this, void 0, void 0, function* () {
         const container = document.getElementById("download-container");
+        const loadingScreen = document.getElementById("loading-screen");
+        const progressBar = document.getElementById("progress-bar");
         if (!container)
             return;
+        container.innerHTML = "";
         // Get the current HTML file name, e.g. "images.html"
         const currentFile = window.location.pathname.split("/").pop() || "";
         // Remove the ".html" extension to get directory name, e.g. "images"
@@ -23,6 +26,21 @@ function loadImagesAndButtons() {
             if (!res.ok)
                 throw new Error("Failed to fetch image list");
             const file = yield res.json();
+            // loading-screen logic
+            let loadCount = 0;
+            let totalToLoad = 0;
+            const updateProgess = () => {
+                if (!progressBar || totalToLoad === 0)
+                    return;
+                const progress = Math.min((loadCount / totalToLoad) * 100, 100);
+                progressBar.style.width = `${progress}%`;
+            };
+            const checkDone = () => {
+                updateProgess();
+                if (loadCount == totalToLoad && loadingScreen) {
+                    loadingScreen.style.display = "none";
+                }
+            };
             file.forEach((filename) => {
                 var _a;
                 const wrapper = document.createElement("div");
@@ -33,12 +51,26 @@ function loadImagesAndButtons() {
                 mediaWrapper.className =
                     "w-72 h-40 flex flex-col overflow-hidden items-center justify-end bg-gray-200 rounded ";
                 let mediaEl;
+                const onLoad = () => {
+                    loadCount++;
+                    checkDone();
+                };
                 if (["jpg", "jpeg", "png", "gif", "svg", "ico"].includes(ext)) {
                     const img = document.createElement("img");
                     img.src = `/storage/${directory}/${filename}`;
                     img.alt = filename;
                     img.className =
                         "max-w-full max-h-full object-contain ml-1 mr-1 mt-2 mb-2 rounded"; // fit inside wrapper
+                    const timeout = setTimeout(onLoad, 5000); // fallback after 5s
+                    img.onload = () => {
+                        clearTimeout(timeout);
+                        onLoad();
+                    };
+                    img.onerror = () => {
+                        clearTimeout(timeout);
+                        onLoad();
+                    };
+                    totalToLoad++;
                     mediaWrapper.appendChild(img);
                     //
                 }
@@ -48,6 +80,9 @@ function loadImagesAndButtons() {
                     video.controls = true;
                     video.className = "max-w-full max-h-full mb-4 rounded";
                     mediaWrapper.appendChild(video);
+                    video.onloadeddata = onLoad;
+                    video.onerror = onLoad;
+                    totalToLoad++;
                     // Add player and logo
                 }
                 else if (["mp3", "wav"].includes(ext)) {
@@ -56,11 +91,17 @@ function loadImagesAndButtons() {
                     audio.controls = true;
                     mediaWrapper.className =
                         "w-72 h-40 flex flex-col overflow-hidden  items-center justify-end bg-gray-200 rounded shadow";
+                    audio.onloadeddata = onLoad;
+                    audio.onerror = onLoad;
+                    totalToLoad++;
                     const musicLogo = document.createElement("img");
                     musicLogo.src = `/icons/music.svg`;
                     musicLogo.className = "w-16 h-16 mb-2";
                     mediaWrapper.appendChild(musicLogo);
                     mediaWrapper.appendChild(audio);
+                    musicLogo.onload = onLoad;
+                    musicLogo.onerror = onLoad;
+                    totalToLoad++;
                     // Progammer files
                 }
                 else if (["asm", "wasm"].includes(ext)) {
@@ -93,6 +134,7 @@ function loadImagesAndButtons() {
                     fallback.textContent = "📄";
                     mediaEl = fallback;
                     mediaWrapper.appendChild(fallback);
+                    // Add this so we still count it as “loaded”:
                 }
                 const button = document.createElement("button");
                 button.textContent = `${filename}`;
@@ -122,10 +164,16 @@ function loadImagesAndButtons() {
                 container.appendChild(wrapper);
                 // container.appendChild(document.createElement("hr"));
             });
+            if (totalToLoad === 0 && loadingScreen) {
+                loadingScreen.style.display = "none";
+            }
         }
         catch (err) {
             console.error(err);
             alert("Could not load images.");
+            const loadingScreen = document.getElementById("loading-screen");
+            if (loadingScreen)
+                loadingScreen.style.display = "none";
         }
     });
 }

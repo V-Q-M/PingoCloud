@@ -1,6 +1,11 @@
 async function loadImagesAndButtons() {
   const container = document.getElementById("download-container");
+  const loadingScreen = document.getElementById("loading-screen");
+  const progressBar = document.getElementById("progress-bar");
+
   if (!container) return;
+
+  container.innerHTML = "";
 
   // Get the current HTML file name, e.g. "images.html"
   const currentFile = window.location.pathname.split("/").pop() || "";
@@ -18,6 +23,23 @@ async function loadImagesAndButtons() {
 
     const file: string[] = await res.json();
 
+    // loading-screen logic
+    let loadCount = 0;
+    let totalToLoad = 0;
+
+    const updateProgess = () => {
+      if (!progressBar || totalToLoad === 0) return;
+      const progress = Math.min((loadCount / totalToLoad) * 100, 100);
+      progressBar.style.width = `${progress}%`;
+    };
+
+    const checkDone = () => {
+      updateProgess();
+      if (loadCount == totalToLoad && loadingScreen) {
+        loadingScreen.style.display = "none";
+      }
+    };
+
     file.forEach((filename) => {
       const wrapper = document.createElement("div");
       wrapper.className = "flex flex-col items-center";
@@ -30,12 +52,28 @@ async function loadImagesAndButtons() {
         "w-72 h-40 flex flex-col overflow-hidden items-center justify-end bg-gray-200 rounded ";
       let mediaEl;
 
+      const onLoad = () => {
+        loadCount++;
+        checkDone();
+      };
+
       if (["jpg", "jpeg", "png", "gif", "svg", "ico"].includes(ext)) {
         const img = document.createElement("img");
         img.src = `/storage/${directory}/${filename}`;
         img.alt = filename;
         img.className =
           "max-w-full max-h-full object-contain ml-1 mr-1 mt-2 mb-2 rounded"; // fit inside wrapper
+
+        const timeout = setTimeout(onLoad, 3000); // fallback after 3s
+        img.onload = () => {
+          clearTimeout(timeout);
+          onLoad();
+        };
+        img.onerror = () => {
+          clearTimeout(timeout);
+          onLoad();
+        };
+        totalToLoad++;
         mediaWrapper.appendChild(img);
         //
       } else if (["mp4", "webm"].includes(ext)) {
@@ -44,6 +82,9 @@ async function loadImagesAndButtons() {
         video.controls = true;
         video.className = "max-w-full max-h-full mb-4 rounded";
         mediaWrapper.appendChild(video);
+        video.onloadeddata = onLoad;
+        video.onerror = onLoad;
+        totalToLoad++;
         // Add player and logo
       } else if (["mp3", "wav"].includes(ext)) {
         const audio = document.createElement("audio");
@@ -51,11 +92,19 @@ async function loadImagesAndButtons() {
         audio.controls = true;
         mediaWrapper.className =
           "w-72 h-40 flex flex-col overflow-hidden  items-center justify-end bg-gray-200 rounded shadow";
+        audio.onloadeddata = onLoad;
+        audio.onerror = onLoad;
+        totalToLoad++;
         const musicLogo = document.createElement("img");
         musicLogo.src = `/icons/music.svg`;
         musicLogo.className = "w-16 h-16 mb-2";
         mediaWrapper.appendChild(musicLogo);
         mediaWrapper.appendChild(audio);
+
+        musicLogo.onload = onLoad;
+        musicLogo.onerror = onLoad;
+        totalToLoad++;
+
         // Progammer files
       } else if (["asm", "wasm"].includes(ext)) {
         const code = document.createElement("img");
@@ -84,6 +133,7 @@ async function loadImagesAndButtons() {
         fallback.textContent = "📄";
         mediaEl = fallback;
         mediaWrapper.appendChild(fallback);
+        // Add this so we still count it as “loaded”:
       }
 
       const button = document.createElement("button");
@@ -118,9 +168,15 @@ async function loadImagesAndButtons() {
       container.appendChild(wrapper);
       // container.appendChild(document.createElement("hr"));
     });
+
+    if (totalToLoad === 0 && loadingScreen) {
+      loadingScreen.style.display = "none";
+    }
   } catch (err) {
     console.error(err);
     alert("Could not load images.");
+    const loadingScreen = document.getElementById("loading-screen");
+    if (loadingScreen) loadingScreen.style.display = "none";
   }
 }
 
