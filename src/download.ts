@@ -126,6 +126,27 @@ async function loadImagesAndButtons() {
         code.className = "w-24 h-24 mt-4 mb-4 object-contain";
         mediaWrapper.appendChild(code);
         //
+      } else if (["pdf"].includes(ext)) {
+        const code = document.createElement("img");
+        code.src = `/icons/pdf.svg`;
+        code.alt = filename;
+        code.className = "w-24 h-24 mt-4 mb-4 object-contain";
+        mediaWrapper.appendChild(code);
+        //
+      } else if (["tex"].includes(ext)) {
+        const code = document.createElement("img");
+        code.src = `/icons/tex.svg`;
+        code.alt = filename;
+        code.className = "w-24 h-24 mt-4 mb-4 object-contain";
+        mediaWrapper.appendChild(code);
+        //
+      } else if (["md", "rmd"].includes(ext)) {
+        const code = document.createElement("img");
+        code.src = `/icons/markdown.svg`;
+        code.alt = filename;
+        code.className = "w-24 h-24 mt-4 mb-4 object-contain";
+        mediaWrapper.appendChild(code);
+        //
       } else {
         const fallback = document.createElement("div");
         fallback.className = "text-5xl";
