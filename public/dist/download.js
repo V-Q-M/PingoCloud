@@ -49,7 +49,7 @@ function loadImagesAndButtons() {
                 // Second wrapper that controls size of media element
                 const mediaWrapper = document.createElement("div");
                 mediaWrapper.className =
-                    "w-72 h-40 flex flex-col overflow-hidden items-center justify-end bg-gray-200 rounded ";
+                    "w-72 h-40 flex flex-items overflow-hidden items-center justify-center bg-gray-200 rounded ";
                 let mediaEl;
                 const onLoad = () => {
                     loadCount++;
@@ -61,7 +61,7 @@ function loadImagesAndButtons() {
                     img.alt = filename;
                     img.className =
                         "max-w-full max-h-full object-contain ml-1 mr-1 mt-2 mb-2 rounded"; // fit inside wrapper
-                    const timeout = setTimeout(onLoad, 5000); // fallback after 5s
+                    const timeout = setTimeout(onLoad, 3000); // fallback after 3s
                     img.onload = () => {
                         clearTimeout(timeout);
                         onLoad();
@@ -108,7 +108,7 @@ function loadImagesAndButtons() {
                     const code = document.createElement("img");
                     code.src = `/icons/asm.svg`;
                     code.alt = filename;
-                    code.className = "max-w-full max-h-full mb-2";
+                    code.className = "w-24 h-24 mt-4 mb-4 object-contain";
                     mediaWrapper.appendChild(code);
                     //
                 }
@@ -116,7 +116,7 @@ function loadImagesAndButtons() {
                     const code = document.createElement("img");
                     code.src = `/icons/java.svg`;
                     code.alt = filename;
-                    code.className = "max-w-full max-h-full mb-2";
+                    code.className = "w-24 h-24 mt-4 mb-4 object-contain";
                     mediaWrapper.appendChild(code);
                     //
                 }
@@ -124,7 +124,7 @@ function loadImagesAndButtons() {
                     const code = document.createElement("img");
                     code.src = `/icons/c.svg`;
                     code.alt = filename;
-                    code.className = "max-w-full max-h-full mb-2";
+                    code.className = "w-24 h-24 mt-4 mb-4 object-contain";
                     mediaWrapper.appendChild(code);
                     //
                 }
@@ -134,7 +134,6 @@ function loadImagesAndButtons() {
                     fallback.textContent = "📄";
                     mediaEl = fallback;
                     mediaWrapper.appendChild(fallback);
-                    // Add this so we still count it as “loaded”:
                 }
                 const button = document.createElement("button");
                 button.textContent = `${filename}`;

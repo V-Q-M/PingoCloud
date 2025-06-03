@@ -49,7 +49,7 @@ async function loadImagesAndButtons() {
       // Second wrapper that controls size of media element
       const mediaWrapper = document.createElement("div");
       mediaWrapper.className =
-        "w-72 h-40 flex flex-col overflow-hidden items-center justify-end bg-gray-200 rounded ";
+        "w-72 h-40 flex flex-items overflow-hidden items-center justify-center bg-gray-200 rounded ";
       let mediaEl;
 
       const onLoad = () => {
@@ -104,27 +104,26 @@ async function loadImagesAndButtons() {
         musicLogo.onload = onLoad;
         musicLogo.onerror = onLoad;
         totalToLoad++;
-
         // Progammer files
       } else if (["asm", "wasm"].includes(ext)) {
         const code = document.createElement("img");
         code.src = `/icons/asm.svg`;
         code.alt = filename;
-        code.className = "max-w-full max-h-full mb-2";
+        code.className = "w-24 h-24 mt-4 mb-4 object-contain";
         mediaWrapper.appendChild(code);
         //
       } else if (["java", "jar"].includes(ext)) {
         const code = document.createElement("img");
         code.src = `/icons/java.svg`;
         code.alt = filename;
-        code.className = "max-w-full max-h-full mb-2";
+        code.className = "w-24 h-24 mt-4 mb-4 object-contain";
         mediaWrapper.appendChild(code);
         //
       } else if (["c", "cpp", "h", "hpp"].includes(ext)) {
         const code = document.createElement("img");
         code.src = `/icons/c.svg`;
         code.alt = filename;
-        code.className = "max-w-full max-h-full mb-2";
+        code.className = "w-24 h-24 mt-4 mb-4 object-contain";
         mediaWrapper.appendChild(code);
         //
       } else {
@@ -133,7 +132,6 @@ async function loadImagesAndButtons() {
         fallback.textContent = "📄";
         mediaEl = fallback;
         mediaWrapper.appendChild(fallback);
-        // Add this so we still count it as “loaded”:
       }
 
       const button = document.createElement("button");
