@@ -1,19 +1,26 @@
 # PingoCloud
 
 This is my own Cloudstorage/ file-sharing system designed for small home servers.
-It is optimized for Vimium like browsers with direct download buttons.
+It is optimized for Vimium in browsers by utilizing direct download instead of buttons.
+
+When looking for a fileserver on my homeserver i only found solutions which are bloated with features i don't need.
+At the same time file-sharing services like nfs or samba are incredibly cumbersome slow.
+That is why I decided to make my own file-sharing system which only supports necessary features and intuitive navigation.
+Finding and managing your local shares has never been easier!
+
+# How to use
+
+Every file has a card with a file preview. Below it is a "button" which when clicked (or hint followed with vimium) automatically downloads the file.\\
 
 # Supported features are:
 
-- Image downloads
-- Video downloads
-- Audio downloads
-- file downloads
+- File downloads
+- File uploads
 
 # Upcoming features are:
 
-- Image uploads
-- File uploads
+- File removal
+- Folder creation
 
 # Installation
 
@@ -32,4 +39,4 @@ In development.
 
 # License
 
-PingoCloud is release under the MIT License.
+PingoCloud is released under the MIT License.
